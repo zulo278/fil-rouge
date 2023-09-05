@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-clusterip-deployment
+  labels:
+    app: posts-clusterip-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: posts-clusterip-template
+  template:
+    metadata:
+      labels:
+        app: posts-clusterip-template
+    spec:
+      containers:
+      - name: posts-clusterip-container
+        imagePullPolicy: IfNotPresent
+        image: posts
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 4000
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: posts-clusterip-template
+  ports:
+  - name: posts-clusterip-port
+    protocol: TCP
+    port: 4000
+    targetPort: 4000

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-bus-deployment
+  labels:
+    app: event-bus-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-bus-template
+  template:
+    metadata:
+      labels:
+        app: event-bus-template
+    spec:
+      containers:
+      - name: event-bus-container
+        imagePullPolicy: IfNotPresent
+        image: event-bus
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 4005
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-bus-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: event-bus-template
+  ports:
+  - name: event-bus-port
+    protocol: TCP
+    port: 4005
+    targetPort: 4005
