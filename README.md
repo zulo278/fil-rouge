@@ -1,20 +1,9 @@
+
 # Projet fil rouge
 
 ## Introduction
 
 Ce projet est une application microservices construite avec Node.js et React. Il est conçu pour être déployé sur Kubernetes.
-
-## Table des matières
-
-- [Introduction](#introduction)
-- [Table des matières](#table-des-matières)
-- [Architecture](#architecture)
-- [Chemins d'Ingress](#chemins-dingress)
-- [Noms de Services Kubernetes](#noms-de-services-kubernetes)
-- [Ports des Services](#ports-des-services)
-- [Prérequis](#prérequis)
-- [Installation](#installation)
-- [Déploiement](#déploiement)
 
 ## Architecture
 
@@ -26,6 +15,43 @@ L'application est composée des services suivants :
 - **Query** : Service pour la gestion des requêtes.
 - **Moderation** : Service pour la modération des commentaires.
 - **Event Bus** : Service pour la gestion des événements entre les services.
+
+
+## Prérequis
+
+- Node.js
+- Docker
+- Kubernetes
+- Python
+
+## Installation
+
+1. Clonez ce dépôt :
+    ```bash
+    git clone https://github.com/Mossbaddi/Pojet_fil_rouge.git
+    ```
+
+## Déploiement
+
+1. Dans le répertoire principal, lancer le script run.py. Ce dernier va construire les images Docker de chaque micro-service et les mettre à disposition pour la suite du déploiement.
+    ```bash
+    py ./run.py
+    ```
+2. Déployez le contrôleur Nginx de l'objet Ingress :
+    ```bash
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+    ```
+
+3. Déployez tous les services Kubernetes :
+    ```bash
+    kubectl apply -f k8s/
+    ```
+4.  Accéder à votre application micro-service en vous rendant sur votre navigateur à l'adresse : http://localhost
+
+
+
+# Partie Développeur
+
 
 ### Chemins d'Ingress
 
@@ -69,38 +95,3 @@ Chaque service écoute sur un port spécifique. Assurez-vous que ces ports sont 
 - **event-bus-srv**: Écoute sur le port 4005.
 
 Si vous modifiez ces ports, assurez-vous également de mettre à jour les références correspondantes dans le code de l'application et les fichiers de configuration Kubernetes.
-
-
-## Prérequis
-
-- Node.js
-- Docker
-- Kubernetes
-
-## Installation
-
-1. Clonez ce dépôt :
-    ```bash
-    git clone https://github.com/Mossbaddi/Pojet_fil_rouge.git
-    ```
-
-2. Installez les dépendances pour chaque service :
-    ```bash
-    cd client && npm install
-    cd ../posts && npm install
-    # Répétez pour tous les services
-    ```
-
-## Déploiement
-
-1. Construisez les images Docker pour chaque service :
-    ```bash
-    docker build -t client ./client
-    docker build -t posts ./posts
-    # Répétez pour tous les services
-    ```
-
-2. Déployez les services sur Kubernetes :
-    ```bash
-    kubectl apply -f k8s/
-    ```
